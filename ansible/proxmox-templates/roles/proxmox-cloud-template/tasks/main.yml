@@ -1,0 +1,44 @@
+- name: Download Ubuntu Cloud Image
+  get_url:
+    url: "{{ cloudimg_url }}"
+    dest: "/tmp/{{ cloudimg_file }}"
+    mode: '0644'
+  when: not lookup('file', "/tmp/{{ cloudimg_file }}", errors='ignore')
+
+- name: Convert image to RAW
+  command: >
+    qemu-img convert -f qcow2 -O raw /tmp/{{ cloudimg_file }} {{ cloudimg_raw }}
+  args:
+    creates: "{{ cloudimg_raw }}"
+
+- name: Create VM templates
+  loop: "{{ cloud_templates }}"
+  loop_control:
+    loop_var: template
+  block:
+    - name: Create VM
+      command: >
+        qm create {{ template.vmid }} --name {{ template.name }}
+        --memory {{ template.memory }} --cores {{ template.cores }}
+        --net0 virtio,bridge={{ bridge }} --ostype l26
+        --scsihw virtio-scsi-pci --serial0 socket --vga serial0
+
+    - name: Import disk to ZFS
+      command: >
+        qm importdisk {{ template.vmid }} {{ cloudimg_raw }} {{ zfs_pool }}
+
+    - name: Attach disk to VM
+      command: >
+        qm set {{ template.vmid }} --scsi0 {{ zfs_pool }}:vm-{{ template.vmid }}-disk-0
+
+    - name: Set boot order
+      command: >
+        qm set {{ template.vmid }} --boot order=scsi0
+
+    - name: Add cloud-init drive
+      command: >
+        qm set {{ template.vmid }} --ide2 {{ zfs_pool }}:cloudinit
+
+    - name: Enable template flag
+      command: >
+        qm template {{ template.vmid }}

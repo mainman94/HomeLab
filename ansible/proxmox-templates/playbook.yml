@@ -1,0 +1,5 @@
+- name: Create cloud-init templates on Proxmox
+  hosts: proxmox
+  become: true
+  roles:
+    - proxmox-cloud-template

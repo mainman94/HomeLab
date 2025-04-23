@@ -1,10 +1,10 @@
 resource "proxmox_virtual_environment_file" "cloud_image_cluster" {
-  content_type = "iso"
+#  content_type = "iso"
   datastore_id = var.pve_storage
   node_name    = var.pve_node_name
 
   source_file {
-    path      = "https://cloud-images-archive.ubuntu.com/releases/noble/release-20240423/ubuntu-24.04-server-cloudimg-amd64.img"
+    path      = "http://cloud-images-archive.ubuntu.com/releases/noble/release-20240423/ubuntu-24.04-server-cloudimg-amd64.img"
     file_name = "oracular-server-cloudimg-amd64_cluster.img"
     checksum  = "32a9d30d18803da72f5936cf2b7b9efcb4d0bb63c67933f17e3bdfd1751de3f3"
   }

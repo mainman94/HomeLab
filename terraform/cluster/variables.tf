@@ -16,7 +16,7 @@ variable "pve_password" {
 variable "pve_endpoint" {
   description = "PVE endpoint "
   type        = string
-  default     = "https://192.168.0.147:8006/api2/json"
+  default     = "https://pve.philippmhauptmann.me:8006/api2/json"
 }
 
 variable "pve_private_key" {
@@ -44,7 +44,7 @@ variable "pve_storage" {
 variable "pve_storage_zfs" {
   description = "PVE local zfs storage name"
   type        = string
-  default     = "local-zfs"
+  default     = "zfs_storage"
 }
 
 variable "pve_node_name" {
