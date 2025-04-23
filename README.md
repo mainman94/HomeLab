@@ -1,18 +1,18 @@
 # HomeLab MK1
 
-# Terraform Kubernetes Cluster on Proxmox with WordPress
+# Terraform Kubernetes Cluster on Proxmox
 
-This repository provides Terraform scripts to provision a **Kubernetes cluster** on **Proxmox** and deploy a **WordPress site** on the cluster.
+This repository provides Terraform scripts to provision a **Kubernetes cluster** on **Proxmox**.
 
 ## Overview
 The project automates the following steps:
-1. Creation of virtual machines on Proxmox using tofu. This machine works as a pipeline and is able to execute GitHub Actions.
-2. 
-3. Setup of a Kubernetes cluster on the provisioned VMs.
-4. Deployment of a WordPress instance using Helm.
-5. Adding a homepage
+1. Creation of virtual machines on Proxmox using tofu.
+2. Configuration of the vms via Ansible
+4. Setup of a Kubernetes cluster on the provisioned VMs.
+6. Adding a homepage
 
 ## Prerequisites
 - Proxmox VE server with API access
 - tofu with bgp/proxmox provider (https://github.com/bpg/terraform-provider-proxmox)
-- Kubespray (https://github.com/kubespray/kubespray)
+- Ansible
+- k3s
