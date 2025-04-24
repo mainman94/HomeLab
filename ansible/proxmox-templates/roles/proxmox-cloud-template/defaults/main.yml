@@ -1,7 +1,7 @@
 cloud_templates:
   - name: k8s-control-plane-template
     vmid: 9001
-    memory: 62144
+    memory: 6144
     cores: 2
   - name: k8s-worker-template
     vmid: 9002

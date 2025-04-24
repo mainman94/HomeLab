@@ -1,14 +1,5 @@
-# This playbook is designed to create Proxmox VM templates from a specified image.
 - name: Delete existing VMs if present
   command: qm destroy {{ template.vmid }} --purge
-  ignore_errors: true
-  loop: "{{ cloud_templates }}"
-  loop_control:
-    loop_var: template
-
-- name: Remove existing zvol if present
-  command: >
-    zfs destroy {{ zfs_pool }}/vm-{{ template.vmid }}-disk-0
   ignore_errors: true
   loop: "{{ cloud_templates }}"
   loop_control:
@@ -51,6 +42,13 @@
 - name: Set boot and serial settings
   command: >
     qm set {{ template.vmid }} --boot c --bootdisk scsi0 --serial0 socket --vga serial0
+  loop: "{{ cloud_templates }}"
+  loop_control:
+    loop_var: template
+
+- name: Enable QEMU Guest Agent
+  command: >
+    qm set {{ template.vmid }} --agent 1
   loop: "{{ cloud_templates }}"
   loop_control:
     loop_var: template
