@@ -1,44 +1,63 @@
-- name: Download Ubuntu Cloud Image
-  get_url:
-    url: "{{ cloudimg_url }}"
-    dest: "/tmp/{{ cloudimg_file }}"
-    mode: '0644'
-  when: not lookup('file', "/tmp/{{ cloudimg_file }}", errors='ignore')
-
-- name: Convert image to RAW
-  command: >
-    qemu-img convert -f qcow2 -O raw /tmp/{{ cloudimg_file }} {{ cloudimg_raw }}
-  args:
-    creates: "{{ cloudimg_raw }}"
-
-- name: Create VM templates
+# This playbook is designed to create Proxmox VM templates from a specified image.
+- name: Delete existing VMs if present
+  command: qm destroy {{ template.vmid }} --purge
+  ignore_errors: true
   loop: "{{ cloud_templates }}"
   loop_control:
     loop_var: template
-  block:
-    - name: Create VM
-      command: >
-        qm create {{ template.vmid }} --name {{ template.name }}
-        --memory {{ template.memory }} --cores {{ template.cores }}
-        --net0 virtio,bridge={{ bridge }} --ostype l26
-        --scsihw virtio-scsi-pci --serial0 socket --vga serial0
 
-    - name: Import disk to ZFS
-      command: >
-        qm importdisk {{ template.vmid }} {{ cloudimg_raw }} {{ zfs_pool }}
+- name: Remove existing zvol if present
+  command: >
+    zfs destroy {{ zfs_pool }}/vm-{{ template.vmid }}-disk-0
+  ignore_errors: true
+  loop: "{{ cloud_templates }}"
+  loop_control:
+    loop_var: template
 
-    - name: Attach disk to VM
-      command: >
-        qm set {{ template.vmid }} --scsi0 {{ zfs_pool }}:vm-{{ template.vmid }}-disk-0
+- name: Download Ubuntu Cloud Image
+  get_url:
+    url: "{{ image_url }}"
+    dest: "{{ image_path }}"
+    force: yes
 
-    - name: Set boot order
-      command: >
-        qm set {{ template.vmid }} --boot order=scsi0
+- name: Create new VM templates
+  command: >
+    qm create {{ template.vmid }} --name {{ template.name }} --memory {{ template.memory }} --cores {{ template.cores }} --net0 virtio,bridge=vmbr0 --ostype l26
+  loop: "{{ cloud_templates }}"
+  loop_control:
+    loop_var: template
 
-    - name: Add cloud-init drive
-      command: >
-        qm set {{ template.vmid }} --ide2 {{ zfs_pool }}:cloudinit
+- name: Import disk to ZFS
+  command: >
+    qm importdisk {{ template.vmid }} {{ image_path }} {{ zfs_pool }}
+  loop: "{{ cloud_templates }}"
+  loop_control:
+    loop_var: template
 
-    - name: Enable template flag
-      command: >
-        qm template {{ template.vmid }}
+- name: Attach imported disk to VM
+  command: >
+    qm set {{ template.vmid }} --scsihw virtio-scsi-pci --scsi0 {{ zfs_pool }}:vm-{{ template.vmid }}-disk-0
+  loop: "{{ cloud_templates }}"
+  loop_control:
+    loop_var: template
+
+- name: Set cloud-init drive
+  command: >
+    qm set {{ template.vmid }} --ide2 {{ zfs_pool }}:cloudinit
+  loop: "{{ cloud_templates }}"
+  loop_control:
+    loop_var: template
+
+- name: Set boot and serial settings
+  command: >
+    qm set {{ template.vmid }} --boot c --bootdisk scsi0 --serial0 socket --vga serial0
+  loop: "{{ cloud_templates }}"
+  loop_control:
+    loop_var: template
+
+- name: Convert VM to template
+  command: >
+    qm template {{ template.vmid }}
+  loop: "{{ cloud_templates }}"
+  loop_control:
+    loop_var: template

@@ -35,6 +35,21 @@ variable "worker_count" {
   default = 1
 }
 
+variable "pve_cp_template_id" { 
+  type    = number
+  default = 9001
+}
+
+variable "pve_worker_template_id" { 
+  type    = number
+  default = 9002
+}
+
+variable "pve_vault_template_id" { 
+  type    = number
+  default = 9003
+}
+
 variable "pve_storage" {
   description = "PVE local storage name"
   type        = string
@@ -56,7 +71,15 @@ variable "pve_node_name" {
 variable "local_backend_path" {
   description = "Path to local backend state file"
   type        = string
-  default     = "~/terraform.tfstate"
+  default     = "C:/Users/phaup/work/terraform.tfstate"
+}
+
+
+variable "ansible_k8s_cluster_inventory_path" {
+  description = "Path to local bak8s clsuter inventory file"
+  type        = string
+  default     = "C:/Users/phaup/work/HomeLab/ansible/k8s-cluster-inventory.ini"
+
 }
 
 variable "pve_worker_node_name" {
@@ -81,6 +104,12 @@ variable "starting_ip_number" {
   description = "The starting IP number for the VMs"
   type        = string
   default     = "200"
+}
+
+variable "vault_ip_address" {
+  description = "The starting IP number for the VMs"
+  type        = string
+  default     = "192.168.0.249"
 }
 
 variable "gateway_ip" {

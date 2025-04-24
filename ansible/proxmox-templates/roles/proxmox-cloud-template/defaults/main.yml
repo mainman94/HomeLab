@@ -1,19 +1,19 @@
 cloud_templates:
   - name: k8s-control-plane-template
     vmid: 9001
-    memory: 8192
-    cores: 4
+    memory: 62144
+    cores: 2
   - name: k8s-worker-template
     vmid: 9002
-    memory: 12288
+    memory: 2048
     cores: 2
   - name: vault-template
     vmid: 9003
     memory: 2048
     cores: 2
 
-cloudimg_url: https://cloud-images.ubuntu.com/24.04/current/ubuntu-24.04-server-cloudimg-amd64.img
-cloudimg_file: ubuntu-24.04.img
-cloudimg_raw: /var/lib/vz/images/cloudimg-raw.img
-zfs_pool: rpool
+image_url: http://cloud-images-archive.ubuntu.com/releases/noble/release-20240423/ubuntu-24.04-server-cloudimg-amd64.img
+image_path: /var/lib/vz/images/cloudimg-raw.img
+
+zfs_pool: zfs_storage
 bridge: vmbr0
