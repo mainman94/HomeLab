@@ -1,0 +1,9 @@
+- name: Create kubeadm config
+  template:
+    src: kubeadm-config.yaml.j2
+    dest: /root/kubeadm-config.yaml
+
+- name: Initialize kubeadm
+  command: kubeadm init --config=/root/kubeadm-config.yaml
+  args:
+    creates: /etc/kubernetes/admin.conf

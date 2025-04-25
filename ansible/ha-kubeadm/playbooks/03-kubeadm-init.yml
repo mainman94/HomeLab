@@ -1,0 +1,5 @@
+- name: Initialize kubeadm on first control plane node
+  hosts: "{{ groups['kube_control_plane'][0] }}"
+  become: yes
+  roles:
+    - kubeadm

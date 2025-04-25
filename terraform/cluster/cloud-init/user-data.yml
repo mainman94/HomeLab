@@ -9,16 +9,16 @@ users:
     shell: /bin/bash
     ssh_authorized_keys:
       - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCr9kjW6uU2txnlQuA4fJR7iMEMHoDl/S0DNZKXMmnLVRu+YvM08UD9R+XJK8W/6FxNt/MnJkuRgELxPj6SRb3VUOuRgAxvKY6fEK4bE3Jh8VSprCGp60ud2JhUR3kput9ixkSZWeRCrEv/EEFVu6ylv+vR+HIYWrLPwldIvZyaaxiCcLldtu0xp+NUswpQcI/HgNZCIV5lWLO3mVHx3E7D7lNcFTwty0qVQ5EssC4gNdPXOd8fbY1UGLYq+yknguJ3+H1Dj74MxKlSzMR4bZUVxoIJNVwF1Yb7ICfOo6BzKeG/0XXeqc8kk6WvJyTokQryb9Dn3EX2kplRxutaKODBlvklUc4w10D6VIZ8dW3Fnupu41KT5xb+N4l8xS6pbCY3wDeraUyWMAsCSkuofbjpLGapB42kLLv58qjcZlEfM85j9XCtov/bKHKjY+4JvLqLyMa5zKNj0yMilzHkKUuVyQABPETq80+G7CXVlOobOL8dAFcJ/TxfKxTe4CxKZTXwVoJFla1rHSkNjjY8uAwuS1ik4wlxXpGgX3fcVsK4iP2aNhv2RfcCY+5vMNUMnlphfWcxrQbQXoMCBDB9oKjXMcZ/LRJrr4rOeTALGSRACz+SD7KaoQEi/yCDtXzygb9GqykDamAETEHqhxc1kq5kuvQmGBSxNTz45Qrq/p9c5Q== workstation"
-  - name: root
-    lock_passwd: false
-    passwd: $6$rounds=4096$nS48C7JOJTViAzUE$2956KAOhX4b0Qbb6gIsCx20bGKmsnuvWQ4ByaONumP3HAzwwgsxlhU78RyD6QDugth8pTeZbRMo6Z70YiCCHH1
-    #hashed_passwd: <output from mkpasswd --method=SHA-512 --rounds=4096>
-    ssh_authorized_keys:
-      - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCr9kjW6uU2txnlQuA4fJR7iMEMHoDl/S0DNZKXMmnLVRu+YvM08UD9R+XJK8W/6FxNt/MnJkuRgELxPj6SRb3VUOuRgAxvKY6fEK4bE3Jh8VSprCGp60ud2JhUR3kput9ixkSZWeRCrEv/EEFVu6ylv+vR+HIYWrLPwldIvZyaaxiCcLldtu0xp+NUswpQcI/HgNZCIV5lWLO3mVHx3E7D7lNcFTwty0qVQ5EssC4gNdPXOd8fbY1UGLYq+yknguJ3+H1Dj74MxKlSzMR4bZUVxoIJNVwF1Yb7ICfOo6BzKeG/0XXeqc8kk6WvJyTokQryb9Dn3EX2kplRxutaKODBlvklUc4w10D6VIZ8dW3Fnupu41KT5xb+N4l8xS6pbCY3wDeraUyWMAsCSkuofbjpLGapB42kLLv58qjcZlEfM85j9XCtov/bKHKjY+4JvLqLyMa5zKNj0yMilzHkKUuVyQABPETq80+G7CXVlOobOL8dAFcJ/TxfKxTe4CxKZTXwVoJFla1rHSkNjjY8uAwuS1ik4wlxXpGgX3fcVsK4iP2aNhv2RfcCY+5vMNUMnlphfWcxrQbQXoMCBDB9oKjXMcZ/LRJrr4rOeTALGSRACz+SD7KaoQEi/yCDtXzygb9GqykDamAETEHqhxc1kq5kuvQmGBSxNTz45Qrq/p9c5Q== workstation"
+#  - name: root
+#    lock_passwd: false
+#    passwd: $6$rounds=4096$nS48C7JOJTViAzUE$2956KAOhX4b0Qbb6gIsCx20bGKmsnuvWQ4ByaONumP3HAzwwgsxlhU78RyD6QDugth8pTeZbRMo6Z70YiCCHH1
+#    #hashed_passwd: <output from mkpasswd --method=SHA-512 --rounds=4096>
+#    ssh_authorized_keys:
+#      - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCr9kjW6uU2txnlQuA4fJR7iMEMHoDl/S0DNZKXMmnLVRu+YvM08UD9R+XJK8W/6FxNt/MnJkuRgELxPj6SRb3VUOuRgAxvKY6fEK4bE3Jh8VSprCGp60ud2JhUR3kput9ixkSZWeRCrEv/EEFVu6ylv+vR+HIYWrLPwldIvZyaaxiCcLldtu0xp+NUswpQcI/HgNZCIV5lWLO3mVHx3E7D7lNcFTwty0qVQ5EssC4gNdPXOd8fbY1UGLYq+yknguJ3+H1Dj74MxKlSzMR4bZUVxoIJNVwF1Yb7ICfOo6BzKeG/0XXeqc8kk6WvJyTokQryb9Dn3EX2kplRxutaKODBlvklUc4w10D6VIZ8dW3Fnupu41KT5xb+N4l8xS6pbCY3wDeraUyWMAsCSkuofbjpLGapB42kLLv58qjcZlEfM85j9XCtov/bKHKjY+4JvLqLyMa5zKNj0yMilzHkKUuVyQABPETq80+G7CXVlOobOL8dAFcJ/TxfKxTe4CxKZTXwVoJFla1rHSkNjjY8uAwuS1ik4wlxXpGgX3fcVsK4iP2aNhv2RfcCY+5vMNUMnlphfWcxrQbQXoMCBDB9oKjXMcZ/LRJrr4rOeTALGSRACz+SD7KaoQEi/yCDtXzygb9GqykDamAETEHqhxc1kq5kuvQmGBSxNTz45Qrq/p9c5Q== workstation"
 
 runcmd:
 # Install GitHub Actions Runner
-  - apt update && apt upgrade -y
+  - apt update
   - apt install -y qemu-guest-agent
 
 power_state:

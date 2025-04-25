@@ -1,0 +1,6 @@
+- name: Setup Keepalived and HAProxy
+  hosts: kube_control_plane
+  become: yes
+  roles:
+    - keepalived
+    - haproxy

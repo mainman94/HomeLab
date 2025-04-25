@@ -1,0 +1,13 @@
+- name: Join control plane nodes
+  hosts: "{{ groups['kube_control_plane'][1:] }}"
+  become: yes
+  tasks:
+    - name: Copy kubeadm join command
+      fetch:
+        src: /root/kubeadm_join_cp.sh
+        dest: /tmp/kubeadm_join_cp.sh
+      delegate_to: "{{ groups['kube_control_plane'][0] }}"
+      run_once: true
+
+    - name: Execute join command
+      command: "sh /tmp/kubeadm_join_cp.sh"

@@ -1,0 +1,13 @@
+- name: Join worker nodes to cluster
+  hosts: kube_node
+  become: yes
+  tasks:
+    - name: Copy join command from CP
+      fetch:
+        src: /root/kubeadm_join_worker.sh
+        dest: /tmp/kubeadm_join_worker.sh
+      delegate_to: "{{ groups['kube_control_plane'][0] }}"
+      run_once: true
+
+    - name: Execute join command
+      command: "sh /tmp/kubeadm_join_worker.sh"
