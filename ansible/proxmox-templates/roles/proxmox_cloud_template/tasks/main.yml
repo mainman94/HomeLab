@@ -4,6 +4,8 @@
   loop: "{{ cloud_templates }}"
   loop_control:
     loop_var: template
+  register: delete_existing_vms
+  changed_when: delete_existing_vms.rc != 0
 
 - name: Download Ubuntu Cloud Image
   ansible.builtin.get_url:
@@ -19,14 +21,19 @@
   loop: "{{ cloud_templates }}"
   loop_control:
     loop_var: template
+  register: create_vm
+  changed_when: create_vm.rc != 0
 
 
 - name: Import disk to ZFS
-  cansible.builtin.ommand: >
+  ansible.builtin.command: >
     qm importdisk {{ template.vmid }} {{ image_path }} {{ zfs_pool }}
   loop: "{{ cloud_templates }}"
   loop_control:
     loop_var: template
+  register: import_diks
+  changed_when: import_diks.rc != 0
+
 
 - name: Attach imported disk to VM
   ansible.builtin.command: >
@@ -34,6 +41,9 @@
   loop: "{{ cloud_templates }}"
   loop_control:
     loop_var: template
+  register: attach_disk
+  changed_when: attach_disk.rc != 0
+
 
 - name: Resize attached disk to 100GB
   ansible.builtin.command: >
@@ -41,6 +51,8 @@
   loop: "{{ cloud_templates }}"
   loop_control:
     loop_var: template
+  register: resize_disk
+  changed_when: resize_disk.rc != 0
 
 - name: Set cloud-init drive
   ansible.builtin.command: >
@@ -48,6 +60,8 @@
   loop: "{{ cloud_templates }}"
   loop_control:
     loop_var: template
+  register: set_cloud_init
+  changed_when: set_cloud_init.rc != 0
 
 - name: Set boot and serial settings
   ansible.builtin.command: >
@@ -55,6 +69,8 @@
   loop: "{{ cloud_templates }}"
   loop_control:
     loop_var: template
+  register: set_boot_serial
+  changed_when: set_boot_serial.rc != 0
 
 - name: Enable QEMU Guest Agent
   ansible.builtin.command: >
@@ -62,6 +78,8 @@
   loop: "{{ cloud_templates }}"
   loop_control:
     loop_var: template
+  register: enable_qemu_agent
+  changed_when: enable_qemu_agent.rc != 0
 
 - name: Convert VM to template
   ansible.builtin.command: >
@@ -69,3 +87,5 @@
   loop: "{{ cloud_templates }}"
   loop_control:
     loop_var: template
+  register: convert_to_template
+  changed_when: convert_to_template.rc != 0

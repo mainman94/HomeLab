@@ -2,4 +2,4 @@
   hosts: proxmox
   become: true
   roles:
-    - proxmox-cloud-template
+    - proxmox_cloud_template
