@@ -3,6 +3,9 @@
 - name: Install prerequisites on all nodes
   import_playbook: 01-install-prereqs.yml
 
+- name: Install containerd on all nodes
+  import_playbook: 01-install-containerd.yml
+
 # Set up HAProxy and Keepalived on control-plane nodes
 - name: Configure Keepalived and HAProxy for API server load balancing
   import_playbook: 02-setup-keepalived-haproxy.yml

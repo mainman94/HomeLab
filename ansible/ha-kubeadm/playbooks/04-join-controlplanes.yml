@@ -1,13 +1,20 @@
-- name: Join control plane nodes
+- name: Join additional control plane nodes
   hosts: "{{ groups['kube_control_plane'][1:] }}"
-  become: yes
+  become: true
   tasks:
-    - name: Copy kubeadm join command
-      fetch:
-        src: /root/kubeadm_join_cp.sh
-        dest: /tmp/kubeadm_join_cp.sh
+    - name: Fetch kubeadm join command from primary control plane
+      ansible.builtin.slurp:
+        src: "/root/join_cp.sh"
       delegate_to: "{{ groups['kube_control_plane'][0] }}"
-      run_once: true
+      register: join_script
 
-    - name: Execute join command
-      command: "sh /tmp/kubeadm_join_cp.sh"
+    - name: Save join command to a temp file
+      ansible.builtin.copy:
+        content: "{{ join_script.content | b64decode }}"
+        dest: "/tmp/kubeadm_join_cp.sh"
+        mode: '0700'
+
+    - name: Execute kubeadm join command
+      ansible.builtin.command: "sh /tmp/kubeadm_join_cp.sh"
+      register: my_output_cp_join
+      changed_when: my_output_cp_join.rc != 0

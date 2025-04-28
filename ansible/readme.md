@@ -1,9 +1,11 @@
 sudo apt update
 sudo apt install pipx sshpass
 
-pipx run --spec --include-deps ansible ansible-galaxy collection install community.general
-pipx inject --include-apps ansible argcomplete
+pipx install --include-deps ansible
+pipx install ansible-dev-tools
+pipx inject ansible argcomplete
 pipx ensurepath
+
 
 ssh-keygen
 ssh-copy-id 192.168.0.147

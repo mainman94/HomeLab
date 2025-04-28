@@ -1,60 +1,70 @@
 - name: Delete existing VMs if present
-  command: qm destroy {{ template.vmid }} --purge
+  ansible.builtin.command: qm destroy {{ template.vmid }} --purge
   ignore_errors: true
   loop: "{{ cloud_templates }}"
   loop_control:
     loop_var: template
 
 - name: Download Ubuntu Cloud Image
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ image_url }}"
     dest: "{{ image_path }}"
-    force: yes
+    force: true
+    mode: "0644"
 
 - name: Create new VM templates
-  command: >
-    qm create {{ template.vmid }} --name {{ template.name }} --memory {{ template.memory }} --cores {{ template.cores }} --net0 virtio,bridge=vmbr0 --ostype l26
+  ansible.builtin.command: >
+    qm create {{ template.vmid }} --name {{ template.name }} --memory {{ template.memory }}
+    --cores {{ template.cores }} --net0 virtio,bridge=vmbr0 --ostype l26
   loop: "{{ cloud_templates }}"
   loop_control:
     loop_var: template
 
+
 - name: Import disk to ZFS
-  command: >
+  cansible.builtin.ommand: >
     qm importdisk {{ template.vmid }} {{ image_path }} {{ zfs_pool }}
   loop: "{{ cloud_templates }}"
   loop_control:
     loop_var: template
 
 - name: Attach imported disk to VM
-  command: >
+  ansible.builtin.command: >
     qm set {{ template.vmid }} --scsihw virtio-scsi-pci --scsi0 {{ zfs_pool }}:vm-{{ template.vmid }}-disk-0
   loop: "{{ cloud_templates }}"
   loop_control:
     loop_var: template
 
+- name: Resize attached disk to 100GB
+  ansible.builtin.command: >
+    qm resize {{ template.vmid }} scsi0 100G
+  loop: "{{ cloud_templates }}"
+  loop_control:
+    loop_var: template
+
 - name: Set cloud-init drive
-  command: >
+  ansible.builtin.command: >
     qm set {{ template.vmid }} --ide2 {{ zfs_pool }}:cloudinit
   loop: "{{ cloud_templates }}"
   loop_control:
     loop_var: template
 
 - name: Set boot and serial settings
-  command: >
+  ansible.builtin.command: >
     qm set {{ template.vmid }} --boot c --bootdisk scsi0 --serial0 socket --vga serial0
   loop: "{{ cloud_templates }}"
   loop_control:
     loop_var: template
 
 - name: Enable QEMU Guest Agent
-  command: >
+  ansible.builtin.command: >
     qm set {{ template.vmid }} --agent 1
   loop: "{{ cloud_templates }}"
   loop_control:
     loop_var: template
 
 - name: Convert VM to template
-  command: >
+  ansible.builtin.command: >
     qm template {{ template.vmid }}
   loop: "{{ cloud_templates }}"
   loop_control:

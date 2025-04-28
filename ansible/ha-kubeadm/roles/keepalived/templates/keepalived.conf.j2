@@ -1,14 +1,14 @@
 vrrp_instance VI_1 {
     state {{ 'MASTER' if inventory_hostname == groups['kube_control_plane'][0] else 'BACKUP' }}
-    interface eth0
+    interface {{ ansible_default_ipv4.interface }}
     virtual_router_id 51
-    priority {{ 100 - groups['kube_control_plane'].index(inventory_hostname) * 10 }}
+    priority {% if inventory_hostname == groups['kube_control_plane'][0] %}150{% elif inventory_hostname == groups['kube_control_plane'][1] %}100{% else %}90{% endif %}
     advert_int 1
     authentication {
         auth_type PASS
-        auth_pass 42secret
+        auth_pass mysecret
     }
     virtual_ipaddress {
-        192.168.0.240
+        {{ vip_address }}
     }
 }
