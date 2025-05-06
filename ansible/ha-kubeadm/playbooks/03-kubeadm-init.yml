@@ -1,5 +1,5 @@
 - name: Initialize kubeadm on first control plane node
-  hosts: "{{ groups['kube_control_plane'][0] }}" # noqa: syntax-check[specific]
+  hosts: "{{ groups['kube_control_plane'][0] }}"
   become: true
   roles:
     - kubeadm

@@ -1,7 +1,7 @@
 - name: Delete existing VMs if present
   ansible.builtin.command: qm destroy {{ template.vmid }} --purge
   ignore_errors: true
-  loop: "{{ cloud_templates }}"
+  loop: "{{ proxmox_cloud_template_cloud_templates }}"
   loop_control:
     loop_var: template
   register: delete_existing_vms
@@ -9,8 +9,8 @@
 
 - name: Download Ubuntu Cloud Image
   ansible.builtin.get_url:
-    url: "{{ image_url }}"
-    dest: "{{ image_path }}"
+    url: "{{ proxmox_cloud_template_image_url }}"
+    dest: "{{ proxmox_cloud_template_image_path }}"
     force: true
     mode: "0644"
 
@@ -18,7 +18,7 @@
   ansible.builtin.command: >
     qm create {{ template.vmid }} --name {{ template.name }} --memory {{ template.memory }}
     --cores {{ template.cores }} --net0 virtio,bridge=vmbr0 --ostype l26
-  loop: "{{ cloud_templates }}"
+  loop: "{{ proxmox_cloud_template_cloud_templates }}"
   loop_control:
     loop_var: template
   register: create_vm
@@ -27,8 +27,8 @@
 
 - name: Import disk to ZFS
   ansible.builtin.command: >
-    qm importdisk {{ template.vmid }} {{ image_path }} {{ zfs_pool }}
-  loop: "{{ cloud_templates }}"
+    qm importdisk {{ template.vmid }} {{ proxmox_cloud_template_image_path }} {{ proxmox_cloud_template_zfs_pool }}
+  loop: "{{ proxmox_cloud_template_cloud_templates }}"
   loop_control:
     loop_var: template
   register: import_diks
@@ -37,8 +37,8 @@
 
 - name: Attach imported disk to VM
   ansible.builtin.command: >
-    qm set {{ template.vmid }} --scsihw virtio-scsi-pci --scsi0 {{ zfs_pool }}:vm-{{ template.vmid }}-disk-0
-  loop: "{{ cloud_templates }}"
+    qm set {{ template.vmid }} --scsihw virtio-scsi-pci --scsi0 {{ proxmox_cloud_template_zfs_pool }}:vm-{{ template.vmid }}-disk-0
+  loop: "{{ proxmox_cloud_template_cloud_templates }}"
   loop_control:
     loop_var: template
   register: attach_disk
@@ -48,25 +48,16 @@
 - name: Resize attached disk to 100GB
   ansible.builtin.command: >
     qm resize {{ template.vmid }} scsi0 100G
-  loop: "{{ cloud_templates }}"
+  loop: "{{ proxmox_cloud_template_cloud_templates }}"
   loop_control:
     loop_var: template
   register: resize_disk
   changed_when: resize_disk.rc != 0
 
-- name: Set cloud-init drive
-  ansible.builtin.command: >
-    qm set {{ template.vmid }} --ide2 {{ zfs_pool }}:cloudinit
-  loop: "{{ cloud_templates }}"
-  loop_control:
-    loop_var: template
-  register: set_cloud_init
-  changed_when: set_cloud_init.rc != 0
-
 - name: Set boot and serial settings
   ansible.builtin.command: >
     qm set {{ template.vmid }} --boot c --bootdisk scsi0 --serial0 socket --vga serial0
-  loop: "{{ cloud_templates }}"
+  loop: "{{ proxmox_cloud_template_cloud_templates }}"
   loop_control:
     loop_var: template
   register: set_boot_serial
@@ -75,7 +66,7 @@
 - name: Enable QEMU Guest Agent
   ansible.builtin.command: >
     qm set {{ template.vmid }} --agent 1
-  loop: "{{ cloud_templates }}"
+  loop: "{{ proxmox_cloud_template_cloud_templates }}"
   loop_control:
     loop_var: template
   register: enable_qemu_agent
@@ -84,7 +75,7 @@
 - name: Convert VM to template
   ansible.builtin.command: >
     qm template {{ template.vmid }}
-  loop: "{{ cloud_templates }}"
+  loop: "{{ proxmox_cloud_template_cloud_templates }}"
   loop_control:
     loop_var: template
   register: convert_to_template

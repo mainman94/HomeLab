@@ -1,4 +1,4 @@
-# cloud-config
+#cloud-config
 timezone: Europe/Oslo
 users:
   - name: ansible_user
@@ -15,7 +15,7 @@ runcmd:
   - apt install -y qemu-guest-agent
 
 power_state:
-  delay: now
-  mode: reboot
-  message: Rebooting after cloud-init completion
-  condition: true
+    delay: now
+    mode: reboot
+    message: Rebooting after cloud-init completion
+    condition: true
