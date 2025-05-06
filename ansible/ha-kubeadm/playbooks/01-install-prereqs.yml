@@ -47,7 +47,7 @@
       ansible.builtin.apt:
         update_cache: true
 
-    - name: Install the main kubeadm, kubelet, kubectl
+    - name: Install the kubeadm, kubelet, kubectl
       ansible.builtin.apt:
         name:
           - 'kubelet'

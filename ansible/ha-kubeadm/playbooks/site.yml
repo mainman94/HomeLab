@@ -1,4 +1,8 @@
 ---
+# Change hostnames, so nodes can join the kubeadm cluster
+- name: Change hostnames, so nodes can join the kubeadm cluster
+  import_playbook: 01-set-hostnames.yml
+
 # Install basic requirements on all nodes (packages, disable swap, etc.)
 - name: Install prerequisites on all nodes
   import_playbook: 01-install-prereqs.yml

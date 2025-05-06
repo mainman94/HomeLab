@@ -9,26 +9,26 @@
   register: init_command
   changed_when: init_command.rc != 0
 
-- name: Generate and save the join command for the Control Plane node
-  ansible.builtin.command: kubeadm token create --print-join-command
-  register: join_command
-  changed_when: join_command.rc != 0
+#- name: Generate and save the join command for the Control Plane node
+#  ansible.builtin.command: kubeadm token create --print-join-command
+#  register: join_command
+#  changed_when: join_command.rc != 0
 
-- name: Save the join command to join_cp.sh (Control Plane)
-  ansible.builtin.copy:
-    content: "{{ join_command.stdout }}"
-    dest: "/root/join_cp.sh"
-    mode: '0755'
-  when: join_command is defined
+#- name: Save the join command to join_cp.sh (Control Plane)
+#  ansible.builtin.copy:
+#    content: "{{ join_command.stdout }}"
+#    dest: "/root/join_cp.sh"
+#    mode: '0755'
+#  when: join_command is defined
 
-- name: Add control plane join command
-  ansible.builtin.command: echo " --control-plane" >> /root/join_cp.sh
-  register: init_command
-  changed_when: init_command.rc != 0
+#- name: Add control plane join command
+#  ansible.builtin.shell: echo " --control-plane" >> /root/join_cp.sh
+#  register: cp_init_command
+#  changed_when: cp_init_command.rc != 0
 
-- name: Save the join command to join_worker.sh (Worker)
-  ansible.builtin.copy:
-    content: "{{ join_command.stdout }}"
-    dest: "/root/join_worker.sh"
-    mode: '0755'
-  when: join_command is defined
+#- name: Save the join command to join_worker.sh (Worker)
+#  ansible.builtin.copy:
+#    content: "{{ join_command.stdout }}"
+#    dest: "/root/join_worker.sh"
+#    mode: '0755'
+#  when: join_command is defined

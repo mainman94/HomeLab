@@ -1,20 +1,36 @@
-- name: Join additional control plane nodes
+---
+- name: Get the certificate key from the first control plane node
+  hosts: "{{ groups['kube_control_plane'][0] }}"
+  become: true
+  tasks:
+    - name: Upload certificates and get the key
+      ansible.builtin.command: kubeadm init phase upload-certs --upload-certs
+      register: upload_certs_output
+
+    - name: Set the certificate key as a fact for the first CP node
+      ansible.builtin.set_fact:
+        certificate_key: "{{ upload_certs_output.stdout_lines[-1] }}"
+      delegate_to: localhost # Ensure fact is set for the control_plane[0] host
+
+- name: Prepare join parameters and join new Control Plane nodes
   hosts: "{{ groups['kube_control_plane'][1:] }}"
   become: true
   tasks:
-    - name: Fetch kubeadm join command from primary control plane
-      ansible.builtin.slurp:
-        src: "/root/join_cp.sh"
+    - name: Generate a new join token and get the join command from the first CP node
+      ansible.builtin.command: kubeadm token create --print-join-command --ttl 24h
       delegate_to: "{{ groups['kube_control_plane'][0] }}"
-      register: join_script
+      register: join_command_output
 
-    - name: Save join command to a temp file
-      ansible.builtin.copy:
-        content: "{{ join_script.content | b64decode }}"
-        dest: "/tmp/kubeadm_join_cp.sh"
-        mode: '0700'
+    - name: Set join token and discovery hash facts
+      ansible.builtin.set_fact:
+        join_token: "{{ join_command_output.stdout_lines[0].split(' ')[2] }}"
+        discovery_hash_full: "{{ join_command_output.stdout_lines[0].split(' ')[6] }}"
+        discovery_hash: "{{ join_command_output.stdout_lines[0].split(':')[1] }}"
 
-    - name: Execute kubeadm join command
-      ansible.builtin.command: "sh /tmp/kubeadm_join_cp.sh"
-      register: my_output_cp_join
-      changed_when: my_output_cp_join.rc != 0
+    - name: Join the cluster as a control plane node
+      command: |
+        kubeadm join "{{ vip_address }}:8443" \
+          --token "{{ join_token }}" \
+          --discovery-token-ca-cert-hash "sha256:{{ discovery_hash }}" \
+          --control-plane \
+          --certificate-key "{{ hostvars[groups['kube_control_plane'][0]].certificate_key }}"
