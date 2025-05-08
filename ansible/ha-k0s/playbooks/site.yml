@@ -1,0 +1,27 @@
+---
+# Change hostnames, so nodes can join the kubeadm cluster
+- name: Change hostnames, so nodes can join the kubeadm cluster
+  import_playbook: 01-set-hostnames.yml
+
+# Install basic requirements on all nodes (packages, disable swap, etc.)
+- name: Install prerequisites on all nodes
+  import_playbook: 01-install-prereqs.yml
+
+- name: Install containerd on all nodes
+  import_playbook: 01-install-containerd.yml
+
+# Set up HAProxy and Keepalived on control-plane nodes
+- name: Configure Keepalived and HAProxy for API server load balancing
+  import_playbook: 02-setup-keepalived-haproxy.yml
+
+# Initialize the first control plane node with kubeadm
+- name: Initialize the first control plane node
+  import_playbook: 03-kubeadm-init.yml
+
+# Join the remaining control plane nodes to the cluster
+- name: Join additional control plane nodes
+  import_playbook: 04-join-controlplanes.yml
+
+# Join the worker nodes to the cluster
+- name: Join worker nodes
+  import_playbook: 05-join-workers.yml
