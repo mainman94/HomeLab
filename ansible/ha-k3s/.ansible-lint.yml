@@ -1,0 +1,7 @@
+collections:
+  - ansible.posix
+  - community.general
+warn_list:
+  - experimental
+parseable: true
+offline: false

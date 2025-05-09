@@ -63,6 +63,15 @@
   register: set_boot_serial
   changed_when: set_boot_serial.rc != 0
 
+- name: Set CPU type to x86-64-v2-AES
+  ansible.builtin.command: >
+    qm set {{ template.vmid }} --cpu x86-64-v2-AES
+  loop: "{{ proxmox_cloud_template_cloud_templates }}"
+  loop_control:
+    loop_var: template
+  register: set_cpu_type
+  changed_when: set_cpu_type.rc != 0
+
 - name: Enable QEMU Guest Agent
   ansible.builtin.command: >
     qm set {{ template.vmid }} --agent 1

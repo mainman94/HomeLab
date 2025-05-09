@@ -1,0 +1,27 @@
+---
+- name: Initialize kube-vip
+  hosts: "{{ groups['kube_control_plane'][0] }}"
+  become: true
+  vars:
+    kube_vip_repo: "https://github.com/mainman94/phm.me_cluster.git"
+    kube_vip_path: "/tmp/phm.me_cluster"
+
+  tasks:
+    - name: Clone kube-vip repository
+      ansible.builtin.git:
+        repo: "{{ kube_vip_repo }}"
+        dest: "{{ kube_vip_path }}"
+        version: main
+        force: true
+
+    - name: Apply kube-vip manifests
+      ansible.builtin.command: k3s kubectl apply -f "{{ kube_vip_path }}/bootstrap/kubevip"
+      register: apply_result
+      changed_when: apply_result.rc == 0
+
+    - name: Wait for kube-vip pods to be ready
+      ansible.builtin.command: k3s kubectl get pods -n kube-system -l app=kube-vip -o jsonpath='{.items[0].status.phase}'
+      register: kube_vip_status
+      until: kube_vip_status.stdout == "Running"
+      retries: 30
+      delay: 10

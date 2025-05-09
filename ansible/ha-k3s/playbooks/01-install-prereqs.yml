@@ -1,0 +1,107 @@
+---
+- name: Install k3s prerequisites
+  hosts: all
+  become: true
+  collections:
+    - community.general
+  tasks:
+    - name: Install required packages
+      ansible.builtin.apt:
+        name:
+          - curl
+          - apt-transport-https
+          - ca-certificates
+          - software-properties-common
+          - gpg
+          - nfs-common
+          - open-iscsi
+          - ufw
+        state: present
+        update_cache: yes
+
+    - name: Disable swap
+      ansible.builtin.command: swapoff -a
+      when: ansible_swaptotal_mb > 0
+      register: output_swapoff
+      changed_when: output_swapoff.rc != 0
+
+    - name: Ensure swap is disabled on reboot
+      ansible.builtin.replace:
+        path: /etc/fstab
+        regexp: '^\s*([^#]\S+)\s+\S+\s+swap\s+.*$'
+        replace: '# \1 swap swap defaults 0 0'
+
+    - name: Enable net.ipv4.ip_forward immediately and persistently
+      ansible.posix.sysctl:
+        name: net.ipv4.ip_forward
+        value: '1'
+        state: present
+        sysctl_set: true
+        reload: true
+
+    - name: Set system parameters for k0s
+      ansible.builtin.sysctl:
+        name: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: present
+        reload: yes
+      with_items:
+        - { key: 'net.bridge.bridge-nf-call-iptables', value: '1' }
+        - { key: 'net.bridge.bridge-nf-call-ip6tables', value: '1' }
+        - { key: 'net.ipv4.ip_forward', value: '1' }
+        - { key: 'vm.swappiness', value: '0' }
+
+    - name: Load required kernel modules
+      ansible.builtin.command: modprobe {{ item }}
+      with_items:
+        - br_netfilter
+        - overlay
+      ignore_errors: yes
+
+    - name: Ensure kernel modules are loaded on boot
+      ansible.builtin.lineinfile:
+        path: /etc/modules-load.d/k0s.conf
+        line: "{{ item }}"
+        create: yes
+        state: present
+      with_items:
+        - br_netfilter
+        - overlay
+
+    - name: Configure system limits
+      ansible.builtin.lineinfile:
+        path: /etc/security/limits.conf
+        line: "{{ item }}"
+        state: present
+      with_items:
+        - "* soft nofile 1048576"
+        - "* hard nofile 1048576"
+        - "* soft nproc 1048576"
+        - "* hard nproc 1048576"
+
+    - name: Enable and start systemd-timesyncd
+      ansible.builtin.systemd:
+        name: systemd-timesyncd
+        state: started
+        enabled: yes
+
+    - name: Configure UFW to allow required ports
+      community.general.ufw:
+        rule: allow
+        port: "{{ item }}"
+        proto: tcp
+      with_items:
+        - 22    # SSH
+        - 6443  # k3s API server
+        - 10250 # kubelet
+        - 2379  # etcd
+        - 2380  # etcd
+        - 10259 # kube-scheduler
+        - 10257 # kube-controller-manager
+      when: ansible_os_family == "Debian"
+
+    - name: Enable UFW
+      community.general.ufw:
+        state: enabled
+        policy: allow
+      when: ansible_os_family == "Debian"

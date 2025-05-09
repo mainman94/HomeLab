@@ -78,7 +78,7 @@ variable "local_backend_path" {
 variable "ansible_k8s_cluster_inventory_path" {
   description = "Path to local bak8s clsuter inventory file"
   type        = string
-  default     = "C:/Users/phaup/work/HomeLab/ansible/ha-k0s/inventory/k8s-cluster-inventory.ini"
+  default     = "C:/Users/phaup/work/HomeLab/ansible/ha-k3s/inventory/k8s-cluster-inventory.ini"
 }
 
 variable "pve_worker_node_name" {
