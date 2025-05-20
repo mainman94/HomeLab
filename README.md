@@ -7,7 +7,7 @@ This repository provides Terraform scripts to provision a **Kubernetes cluster**
 ## Overview
 The project automates the following steps:
 1. Creation of virtual machines on Proxmox using tofu
-2. Configuration of the vms via Ansible
+2. Configuration of the VMs via Ansible
 4. Setup of a Kubernetes cluster on the provisioned VMs
 6. Adding a homepage
 
