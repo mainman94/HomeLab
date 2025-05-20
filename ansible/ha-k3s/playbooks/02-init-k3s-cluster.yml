@@ -55,12 +55,18 @@
         dest: /usr/local/bin/kubectl
         mode: '0755'
 
+    - name: Remove existing k9s
+      ansible.builtin.apt:
+        name: k9s
+        state: absent
+      ignore_errors: true
+
     - name: Download k9s
       ansible.builtin.get_url:
         url: https://github.com/derailed/k9s/releases/download/v0.50.5/k9s_linux_amd64.deb
         dest: /tmp/k9s.deb
         mode: '0644'
-
+        
     - name: Install k9s
       ansible.builtin.apt:
         deb: /tmp/k9s.deb

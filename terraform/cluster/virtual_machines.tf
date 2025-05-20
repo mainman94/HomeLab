@@ -50,7 +50,7 @@ resource "proxmox_virtual_environment_vm" "k8s_worker" {
 
 # Vault Node
 resource "proxmox_virtual_environment_vm" "vault" {
-  count       = 1
+  count       = 0
   name        = "vault"
   tags        = ["vault"]
   node_name   = var.pve_node_name

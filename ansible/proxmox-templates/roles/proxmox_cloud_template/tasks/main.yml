@@ -25,9 +25,9 @@
   changed_when: create_vm.rc != 0
 
 
-- name: Import disk to ZFS
+- name: Import disk to storage pool
   ansible.builtin.command: >
-    qm importdisk {{ template.vmid }} {{ proxmox_cloud_template_image_path }} {{ proxmox_cloud_template_zfs_pool }}
+    qm importdisk {{ template.vmid }} {{ proxmox_cloud_template_image_path }} {{ proxmox_cloud_template_storage_pool }}
   loop: "{{ proxmox_cloud_template_cloud_templates }}"
   loop_control:
     loop_var: template
@@ -37,7 +37,7 @@
 
 - name: Attach imported disk to VM
   ansible.builtin.command: >
-    qm set {{ template.vmid }} --scsihw virtio-scsi-pci --scsi0 {{ proxmox_cloud_template_zfs_pool }}:vm-{{ template.vmid }}-disk-0
+    qm set {{ template.vmid }} --scsihw virtio-scsi-pci --scsi0 {{ proxmox_cloud_template_storage_pool }}:vm-{{ template.vmid }}-disk-0
   loop: "{{ proxmox_cloud_template_cloud_templates }}"
   loop_control:
     loop_var: template
@@ -45,9 +45,9 @@
   changed_when: attach_disk.rc != 0
 
 
-- name: Resize attached disk to 100GB
+- name: Resize attached disk to proxmox_cloud_template_disk_size GB
   ansible.builtin.command: >
-    qm resize {{ template.vmid }} scsi0 100G
+    qm resize {{ template.vmid }} scsi0 "{{ proxmox_cloud_template_disk_size }}"
   loop: "{{ proxmox_cloud_template_cloud_templates }}"
   loop_control:
     loop_var: template

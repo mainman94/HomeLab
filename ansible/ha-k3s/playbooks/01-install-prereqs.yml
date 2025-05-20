@@ -39,23 +39,12 @@
         sysctl_set: true
         reload: true
 
-    - name: Set system parameters for k0s
-      ansible.builtin.sysctl:
-        name: "{{ item.key }}"
-        value: "{{ item.value }}"
-        state: present
-        reload: yes
-      with_items:
-        - { key: 'net.bridge.bridge-nf-call-iptables', value: '1' }
-        - { key: 'net.bridge.bridge-nf-call-ip6tables', value: '1' }
-        - { key: 'net.ipv4.ip_forward', value: '1' }
-        - { key: 'vm.swappiness', value: '0' }
-
     - name: Load required kernel modules
-      ansible.builtin.command: modprobe {{ item }}
-      with_items:
-        - br_netfilter
-        - overlay
+      ansible.builtin.command: modprobe br_netfilter
+      ignore_errors: yes
+
+    - name: Load required kernel modules - overlay
+      ansible.builtin.command: modprobe overlay
       ignore_errors: yes
 
     - name: Ensure kernel modules are loaded on boot
@@ -67,6 +56,18 @@
       with_items:
         - br_netfilter
         - overlay
+
+    - name: Set system parameters for k0s
+      ansible.builtin.sysctl:
+        name: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: present
+        reload: yes
+      with_items:
+        - { key: 'net.bridge.bridge-nf-call-iptables', value: '1' }
+        - { key: 'net.bridge.bridge-nf-call-ip6tables', value: '1' }
+        - { key: 'net.ipv4.ip_forward', value: '1' }
+        - { key: 'vm.swappiness', value: '0' }
 
     - name: Configure system limits
       ansible.builtin.lineinfile:

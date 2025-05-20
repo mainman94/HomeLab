@@ -27,7 +27,7 @@ variable "pve_private_key" {
 
 variable "control_plane_count" {
   type    = number
-  default = 3
+  default = 1
 }
 
 variable "worker_count" {
@@ -59,7 +59,7 @@ variable "pve_storage" {
 variable "pve_storage_zfs" {
   description = "PVE local zfs storage name"
   type        = string
-  default     = "zfs_storage"
+  default     = "local-lvm"
 }
 
 variable "pve_node_name" {

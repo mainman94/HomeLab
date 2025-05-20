@@ -204,6 +204,6 @@
 
     - name: Sync ArgoCD application
       ansible.builtin.shell: |
-        argocd app sync app-of-apps
+        argocd app sync init-app-of-apps
       register: argocd_app_sync
       changed_when: false

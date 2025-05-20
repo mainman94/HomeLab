@@ -11,10 +11,10 @@
         node_ip: "{{ ansible_default_ipv4.address }}"
 
     - name: Get k3s token from first control plane node
-      ansible.builtin.slurp:
-        src: /var/lib/rancher/k3s/server/agent-token
+      ansible.builtin.shell: cat /var/lib/rancher/k3s/server/node-token
       delegate_to: "{{ groups['kube_control_plane'][0] }}"
       register: k3s_token
+      changed_when: false
 
     - name: Get CA certificate from first control plane node
       ansible.builtin.slurp:
@@ -36,7 +36,7 @@
 
     - name: Join node to k3s cluster as worker
       ansible.builtin.shell: >
-        curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION={{ k3s_version }} K3S_TOKEN={{ k3s_token.content }} sh -s - agent
+        curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION={{ k3s_version }} K3S_TOKEN="{{ k3s_token.stdout }}" sh -s - agent
         --server https://{{ vip_address }}:6443
         --node-ip {{ node_ip }}
       register: k3s_join

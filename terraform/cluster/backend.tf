@@ -1,5 +1,5 @@
 terraform {
   backend "local" {
-    path = var.local_backend_path
+    path = "C:/Users/phaup/work/terraform.tfstate"
   }
 }
