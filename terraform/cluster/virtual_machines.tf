@@ -10,7 +10,7 @@ resource "proxmox_virtual_environment_vm" "k8s_cp" {
   }
 
   initialization {
-    datastore_id        = var.pve_storage_zfs
+    datastore_id      = var.pve_storage_zfs
     user_data_file_id = proxmox_virtual_environment_file.cloud_config.id
 
     ip_config {
@@ -60,7 +60,7 @@ resource "proxmox_virtual_environment_vm" "vault" {
   }
 
   initialization {
-    datastore_id        = var.pve_storage_zfs
+    datastore_id      = var.pve_storage_zfs
     user_data_file_id = proxmox_virtual_environment_file.cloud_config.id
 
     ip_config {

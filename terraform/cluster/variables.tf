@@ -14,9 +14,9 @@ variable "pve_password" {
 }
 
 variable "pve_endpoint" {
-  description = "PVE endpoint "
+  description = "PVE endpoint URL"
   type        = string
-  default     = "https://pve.philippmhauptmann.me:8006/api2/json"
+  default     = "https://lab-pve.philippmhauptmann.me:8006/api2/json"
 }
 
 variable "pve_private_key" {
@@ -27,12 +27,12 @@ variable "pve_private_key" {
 
 variable "control_plane_count" {
   type    = number
-  default = 1
+  default = 3
 }
 
 variable "worker_count" {
   type    = number
-  default = 1
+  default = 0
 }
 
 variable "pve_cp_template_id" { 
@@ -59,13 +59,13 @@ variable "pve_storage" {
 variable "pve_storage_zfs" {
   description = "PVE local zfs storage name"
   type        = string
-  default     = "local-lvm"
+  default     = "storage"
 }
 
 variable "pve_node_name" {
   description = "PVE node name"
   type        = string
-  default     = "pve"
+  default     = "lab-pve"
 }
 
 variable "local_backend_path" {

@@ -3,7 +3,7 @@ timezone: Europe/Oslo
 users:
   - name: ansible_user
     passwd: $6$rounds=4096$nS48C7JOJTViAzUE$2956KAOhX4b0Qbb6gIsCx20bGKmsnuvWQ4ByaONumP3HAzwwgsxlhU78RyD6QDugth8pTeZbRMo6Z70YiCCHH1
-    groups: [adm, cdrom, dip, plugdev, lxd, sudo]
+#    groups: [adm, cdrom, dip, plugdev, lxd, sudo]
     lock-passwd: false
     sudo: ALL=(ALL) NOPASSWD:ALL
     shell: /bin/bash
@@ -13,9 +13,12 @@ users:
 runcmd:
   - apt update
   - apt install -y qemu-guest-agent
+  - systemctl enable qemu-guest-agent
+  - systemctl start qemu-guest-agent
+  - echo "done" > /tmp/cloud-config.done
 
 power_state:
-    delay: now
-    mode: reboot
-    message: Rebooting after cloud-init completion
-    condition: true
+  delay: now
+  mode: reboot
+  message: Rebooting after cloud-init completion
+  condition: true

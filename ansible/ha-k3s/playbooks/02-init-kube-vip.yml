@@ -15,7 +15,7 @@
         force: true
 
     - name: Apply kube-vip manifests
-      ansible.builtin.command: k3s kubectl apply -f "{{ kube_vip_path }}/bootstrap/kubevip"
+      ansible.builtin.command: k3s kubectl apply -f "{{ kube_vip_path }}/homelab/bootstrap/kubevip"
       register: apply_result
       changed_when: apply_result.rc == 0
 
