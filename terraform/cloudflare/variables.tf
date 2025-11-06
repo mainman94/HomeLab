@@ -13,7 +13,7 @@ variable "cloudflare_zone_id" {
 variable "public_ip" {
   description = "The public IP address for A records."
   type        = string
-  default     = "80.109.202.7"
+  default     = "84.115.110.237"
 }
 
 variable "a_records" {
@@ -28,13 +28,11 @@ variable "a_records" {
     "immich",
     "jellyfin",
     "jellyseerr",
-    "minio",
     "n8n",
     "nc",
     "paperless",
     "radarr",
     "rancher",
-    "s3",
     "sonarr",
     "uptime",
     "vault",
