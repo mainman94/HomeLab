@@ -10,6 +10,12 @@ variable "cloudflare_zone_id" {
   sensitive   = true
 }
 
+variable "CLOUDFLARE_ACCOUNT_ID" {
+  description = "Cloudflare Account ID"
+  type        = string
+  sensitive   = true
+}
+
 variable "public_ip" {
   description = "The public IP address for A records."
   type        = string
