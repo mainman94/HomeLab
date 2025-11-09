@@ -49,7 +49,7 @@ variable "cname_backend_records" {
   description = "A list of CNAME records for backend services."
   type        = set(string)
   default = [
-    "sftp"]
+  "s3"]
 }
 
 variable "CLOUDFLARE_TUNNEL_STRASSGANG_ID" {
@@ -60,5 +60,5 @@ variable "CLOUDFLARE_TUNNEL_STRASSGANG_ID" {
 
 variable "MY_EMAIL" {
   description = "Email address for MFA access policy"
-  type = string
+  type        = string
 }
