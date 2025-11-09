@@ -43,8 +43,7 @@ variable "cname_backend_records" {
   description = "A list of CNAME records for backend services."
   type        = set(string)
   default = [
-    "master-sw",
-    "s3-sw"]
+    "sftp"]
 }
 
 variable "CLOUDFLARE_TUNNEL_STRASSGANG_ID" {
