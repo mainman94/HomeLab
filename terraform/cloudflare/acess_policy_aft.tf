@@ -21,6 +21,7 @@ resource "cloudflare_zero_trust_access_application" "seaweedfs_filer" {
 # Service Token für TrueNAS
 ############################################
 resource "cloudflare_zero_trust_access_service_token" "truenas_seaweedfs" {
+  duration   = "forever"
   account_id = var.CLOUDFLARE_ACCOUNT_ID
   name       = "TrueNAS-SeaweedFS-Mount-Automatic"
 }
