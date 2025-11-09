@@ -1,4 +1,7 @@
-# A records for subdomains
+#################################
+#     A records for subdomains  #
+#################################
+
 resource "cloudflare_dns_record" "a_records" {
   for_each = var.a_records
 
@@ -59,4 +62,18 @@ resource "cloudflare_dns_record" "spf" {
   content = "v=spf1 -all"
   type    = "TXT"
   ttl     = 1
+}
+
+################################
+#  CNAME records for backend   #
+################################
+resource "cloudflare_dns_record" "cname_backend_records" {
+  for_each = var.cname_backend_records
+
+  zone_id = var.cloudflare_zone_id
+  name    = each.key
+  content = "${var.CLOUDFLARE_TUNNEL_STRASSGANG_ID}.cfargotunnel.com"
+  type    = "CNAME"
+  ttl     = 1
+  proxied = true
 }

@@ -38,3 +38,17 @@ variable "a_records" {
     "vault",
   ]
 }
+
+variable "cname_backend_records" {
+  description = "A list of CNAME records for backend services."
+  type        = set(string)
+  default = [
+    "master-sw",
+    "s3-sw"]
+}
+
+variable "CLOUDFLARE_TUNNEL_STRASSGANG_ID" {
+  description = "Cloudflare Tunnel ID for Strassgang"
+  type        = string
+  sensitive   = true
+}
