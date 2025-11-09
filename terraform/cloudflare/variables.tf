@@ -57,3 +57,8 @@ variable "CLOUDFLARE_TUNNEL_STRASSGANG_ID" {
   type        = string
   sensitive   = true
 }
+
+variable "MY_EMAIL" {
+  description = "Email address for MFA access policy"
+  type = string
+}

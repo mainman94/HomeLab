@@ -38,7 +38,7 @@ resource "cloudflare_zero_trust_access_policy" "mfa_email" {
   include = [
     {
       email = {
-        email = "deine.email@beispiel.de"
+        email = var.MY_EMAIL
       }
     }
   ]
