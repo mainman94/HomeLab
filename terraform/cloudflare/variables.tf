@@ -48,7 +48,9 @@ variable "a_records" {
 variable "cname_backend_records" {
   description = "A list of CNAME records for backend services."
   type        = set(string)
-  default     = []
+  default     = [
+    "harbor"
+  ]
 }
 
 variable "CLOUDFLARE_TUNNEL_STRASSGANG_ID" {
