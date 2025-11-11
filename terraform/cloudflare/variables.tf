@@ -49,7 +49,7 @@ variable "cname_backend_records" {
   description = "A list of CNAME records for backend services."
   type        = set(string)
   default     = [
-    "harbor"
+    "registry"
   ]
 }
 
