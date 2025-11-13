@@ -1,6 +1,0 @@
-collections:
-  - ansible.posix
-warn_list:
-  - experimental
-parseable: true
-offline: false
