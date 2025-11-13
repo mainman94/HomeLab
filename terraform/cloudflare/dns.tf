@@ -77,3 +77,18 @@ resource "cloudflare_dns_record" "cname_backend_records" {
   ttl     = 1
   proxied = true
 }
+
+#################################
+#     A records hauptmann.dev   #
+#################################
+
+resource "cloudflare_dns_record" "a_records_hauptmann_dev" {
+  for_each = var.a_records_hauptmann_dev
+
+  zone_id = var.CLOUDFLARE_ZONE_ID_HAUPTMANN_DEV
+  name    = each.key
+  content = var.public_ip
+  type    = "A"
+  ttl     = 1
+  proxied = true
+}

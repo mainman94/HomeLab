@@ -15,6 +15,11 @@ variable "CLOUDFLARE_ACCOUNT_ID" {
   type        = string
   sensitive   = true
 }
+variable "CLOUDFLARE_ZONE_ID_HAUPTMANN_DEV" {
+  description = "Cloudflare Zone ID for hauptmann.dev"
+  type        = string
+  sensitive   = true
+}
 
 variable "public_ip" {
   description = "The public IP address for A records."
@@ -42,6 +47,15 @@ variable "a_records" {
     "sonarr",
     "uptime",
     "vault",
+  ]
+}
+
+variable "a_records_hauptmann_dev" {
+  description = "A list of a records"
+  type        = set(string)
+  default = [
+    "*.hauptmann.dev",
+    "hauptmann.dev",
   ]
 }
 
