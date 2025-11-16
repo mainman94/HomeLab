@@ -11,10 +11,9 @@ resource "cloudflare_dns_record" "mx" {
   type     = "MX"
   content  = each.value.server
   priority = each.value.priority
-  ttl      = 1  # "auto"
+  ttl      = 1
 }
 
-# 3. Weiterleitungsregel (ALTE Syntax: Listen statt Blöcke)
 resource "cloudflare_email_routing_rule" "forward_hello" {
   zone_id  = var.CLOUDFLARE_ZONE_ID_HAUPTMANN_DEV
   priority = 0
@@ -26,7 +25,6 @@ resource "cloudflare_email_routing_rule" "forward_hello" {
     }
   ]
 
-  # Actions als LISTE (nicht Block!)
   actions = [
     {
       type  = "forward"
