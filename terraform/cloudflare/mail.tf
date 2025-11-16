@@ -18,7 +18,7 @@ resource "cloudflare_dns_record" "txt_spf" {
   zone_id = var.CLOUDFLARE_ZONE_ID_HAUPTMANN_DEV
   name    = var.cloudflare_domain
   type    = "TXT"
-  content = "v=spf1 include:_spf.mx.cloudflare.net ~all"
+  content = "\"v=spf1 include:_spf.mx.cloudflare.net ~all\""
   ttl     = 1
 }
 
