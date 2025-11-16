@@ -59,7 +59,7 @@ resource "cloudflare_dns_record" "google_site_verification" {
 resource "cloudflare_dns_record" "spf" {
   zone_id = var.cloudflare_zone_id
   name    = "@"
-  content = "v=spf1 -all"
+  content = "v=spf1 include:_spf.mx.cloudflare.net ~all"
   type    = "TXT"
   ttl     = 1
 }
