@@ -16,6 +16,12 @@ variable "cloudflare_domain" {
   sensitive   = true
 }
 
+variable "cloudflare_dkim_key" {
+  description = "Cloudflare DKIM Public Key"
+  type        = string
+  sensitive   = true
+}
+
 variable "CLOUDFLARE_ACCOUNT_ID" {
   description = "Cloudflare Account ID"
   type        = string
