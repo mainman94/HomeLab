@@ -1,18 +1,18 @@
-# 2. MX Records (konsolidiert)
-resource "cloudflare_dns_record" "mx" {
-  for_each = {
-    "route1" = { server = "route1.mx.cloudflare.net", priority = 1 }
-    "route2" = { server = "route2.mx.cloudflare.net", priority = 1 }
-    "route3" = { server = "route3.mx.cloudflare.net", priority = 2 }
-  }
-
-  zone_id  = var.CLOUDFLARE_ZONE_ID_HAUPTMANN_DEV
-  name     = var.cloudflare_domain
-  type     = "MX"
-  content  = each.value.server
-  priority = each.value.priority
-  ttl      = 1
-}
+# 2. MX Records
+#resource "cloudflare_dns_record" "mx" {
+#  for_each = {
+#    "route1" = { server = "route1.mx.cloudflare.net", priority = 1 }
+#    "route2" = { server = "route2.mx.cloudflare.net", priority = 1 }
+#    "route3" = { server = "route3.mx.cloudflare.net", priority = 2 }
+#  }
+#
+#  zone_id  = var.CLOUDFLARE_ZONE_ID_HAUPTMANN_DEV
+#  name     = var.cloudflare_domain
+#  type     = "MX"
+#  content  = each.value.server
+#  priority = each.value.priority
+#  ttl      = 1
+#}
 
 resource "cloudflare_dns_record" "txt_spf" {
   zone_id = var.CLOUDFLARE_ZONE_ID_HAUPTMANN_DEV
